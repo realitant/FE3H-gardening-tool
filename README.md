@@ -1,5 +1,4 @@
 # FE3H-gardening-tool
-A python program to determine what seeds you should plant
 
 
 This program assumes that you can plant up to 5 seeds and that you have unlocked all the cultivate methods. I may in the future have another prompt for professor level and all that stuff, but as of right now, that has not happened.
