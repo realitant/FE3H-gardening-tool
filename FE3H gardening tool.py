@@ -64,14 +64,14 @@ for stat in boosters:
         
 
 def sort(seeds,item):
-    tops=list()
-    bots=list()
+    sort=list()
     for seed in seeds:
         if seed.top.count(item)>0:
-            tops.append(seed)
-        if seed.bottom.count(item)>0:
-            bots.append(seed)
-    return (tops,bots)
+            sort.append(seed)
+        else:
+            if seed.bottom.count(item)>0:
+                sort.append(seed)
+    return sort
 
 def Score(seed1,am1,seed2=EFODLAN,am2=0):
     A=-5*((am1*seed1.rank+am2*seed2.rank)%12)
@@ -79,65 +79,65 @@ def Score(seed1,am1,seed2=EFODLAN,am2=0):
     score=A+B
     return score
 
-def topCombos(seeds,item):
-    print("TOPS:")
+def Combos(goodseeds,seeds,item):
     for i in range(1,6):
         for j in range(0, min(i,6-i)):
-            for seed1 in seeds:
+            for seed1 in goodseeds:
                 for seed2 in seeds:
-                    if SCORETOP[0] < Score(seed1,i,seed2,j) and Score(seed1,i,seed2,j) < SCORETOP[1]:
-                        n=4-2*(seed1.top.count(item)+seed2.top.count(item))+(seed1.bottom.count(item)+seed2.bottom.count(item))
+                    score=Score(seed1,i,seed2,j)
+                    if SCORETOP[0] < score and score < SCORETOP[1]:
+                        n=3*(seed1.top.count(item)+seed2.top.count(item))+(seed1.bottom.count(item)+seed2.bottom.count(item))-2
+                        minc=max(0,math.ceil((13-score)/2))
+                        maxc=min(6,math.floor((22-score)/2))
                         if seed1==seed2:
                             if j==0:
                                 for k in range(n):
                                     print("*",end="")
-                                print(i," ",seed1.name)
+                                print(" ",i," ",seed1.name,"  Cultivate Level: ",minc,"-",maxc)
                         else:
                             if j>0:
                                 for k in range(n):
                                     print("*",end="")
-                                print(i," ",seed1.name," + ",j," ",seed2.name)
-
-def botCombos(seeds,item):
-    print("BOTTOMS:")
-    for i in range(1,6):
-        for j in range(0, min(i+1,6-i)):
-            for seed1 in seeds:
-                for seed2 in seeds:
-                    if SCOREBOT[0] < Score(seed1,i,seed2,j) and Score(seed1,i,seed2,j) < SCOREBOT[1]:
-                        n=4-2*(seed1.bottom.count(item)+seed2.bottom.count(item))+(seed1.top.count(item)+seed2.top.count(item))
+                                print(" ",i," ",seed1.name," + ",j," ",seed2.name,"  Cultivate Level: ",minc,"-",maxc)
+                    if SCOREBOT[0]< score and score < SCOREBOT[1]:
+                        n=3*(seed1.bottom.count(item)+seed2.bottom.count(item))+(seed1.top.count(item)+seed2.top.count(item))-2
+                        minc=max(0,math.ceil((23-score)/2))
                         if seed1==seed2:
                             if j==0:
                                 for k in range(n):
                                     print("*",end="")
-                                print(i," ",seed1.name)
-                        else:
-                            if j>0:
-                                for k in range(n):
-                                    print("*",end="")
-                                print(i," ",seed1.name," + ",j," ",seed2.name)
+                                print(" ",i," ",seed1.name,"  Cultivate Level: ",minc,"- 6")
+                            else:
+                                if j>0:
+                                    for k in range(n):
+                                        print("*",end="")
+                                    print(" ",i," ",seed1.name," + ",j," ",seed2.name,"  Cultivate Level: ",minc,"- 6")
+             
 
-def statCombos(stat):
+def statCombos(stat,seeds):
     for i in range(1,6):
         for j in range(0,min(i+1,6-i)):
             for seed1 in stat.seeds:
-                for seed2 in stat.seeds:
-                    if SCORETOP[0] < Score(seed1,i,seed2,j) and Score(seed1,i,seed2,j) < SCOREBOT[1]:
+                for seed2 in seeds:
+                    score=Score(seed1,i,seed2,j)
+                    if SCORETOP[0] < score and score < SCOREBOT[1]:
+                        minc=max(0,math.ceil((13-score)/2))
                         if seed1==seed2:
                             if j==0:
-                                print(i," ",seed1.name)
+                                print("* ",i," ",seed1.name,"  Cultivate Level: ",minc,"+")
                         else:
                             if j>0:
-                                print(i," ",seed1.name," + ",j," ",seed2.name)                        
+                                if stat.seeds.count(seed2)>0:
+                                    print("*",end=" ")
+                                print(i," ",seed1.name," + ",j," ",seed2.name,"  Cultivate Level: ",minc,"+")                        
 
 def getCombos(item):
     if item in itemset:
         mytup=sort(seeds,item)
-        topCombos(mytup[0],item)
-        botCombos(mytup[1],item)
+        Combos(mytup,seeds,item)
     else:
         if boosterlist.count(item)>0:
-            statCombos(stat)
+            statCombos(stat,seeds)
         else:
             print('Item not found')
 on=True
@@ -148,13 +148,3 @@ while on:
     print("Press enter to run again or type 'exit' to quit")
     if input()=='exit':
         on=False
-
-
-
-
-
-
-
-
-
-                   
