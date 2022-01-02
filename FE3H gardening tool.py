@@ -327,22 +327,21 @@ def statCombos(stat,seeds):
                 for seed2 in stat.seeds:
                     score=Score(seed1,i,seed2,j)
                     tier=getTier(score)
-                    minc=max(0,math.ceil((MINMAX[tier[0]-1][tier[1]][0]-score)/2))
                     statscore=tierScore(tier)*getAmount(i,6,j)
                     if seed1==seed2:
                         if j==0:
-                            option=(i,seed1.name,minc,statscore)
+                            option=(i,seed1.name,statscore)
                             options.append(option)
                     else:
                         if j>0:
-                            option=(i,seed1.name,j,seed2.name,minc,statscore)
+                            option=(i,seed1.name,j,seed2.name,statscore)
                             options.append(option)
     options.sort(key=sortAlg,reverse=True)
     for option in options:
-        if len(option)==4:
-            print(option[0],option[1], "\tCultivate Level:", option[2], "+\t\tSCORE:\t", option[3])
+        if len(option)==3:
+            print(option[0],option[1], "\tSCORE:\t", option[2])
         else:
-            print(option[0],option[1], "+", option[2],option[3],"\tCultivate Level:", option[4], "+\t\tSCORE:\t", option[5])
+            print(option[0],option[1], "+", option[2],option[3],"\tSCORE:\t", option[4])
 
 def getCombos(item):
     if item in itemset:
