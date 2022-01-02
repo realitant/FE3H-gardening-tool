@@ -345,10 +345,11 @@ def tierScore(tier):
     if tier==(3,1):
         return 20
 
-def statCombos(stat,seeds):
+def statCombos(stat,seeds,plevel):
+    maxseeds=pLevel(plevel)[0]
     options=list()
-    for i in range(1,6):
-        for j in range(0,min(i+1,6-i)):
+    for i in range(1,maxseeds+1):
+        for j in range(0,min(i+1,maxseeds+1-i)):
             for seed1 in stat.seeds:
                 for seed2 in stat.seeds:
                     score=Score(seed1,i,seed2,j)
@@ -374,7 +375,7 @@ def getCombos(item,plevel):
         Combos(seeds,item,plevel)
     else:
         if boosterlist.count(item)>0:
-            statCombos(stat,seeds)
+            statCombos(stat,seeds,plevel)
         else:
             print('Item not found')
 on=True
