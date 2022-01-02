@@ -218,15 +218,15 @@ for seed in seeds:
 for stat in boosters:
     boosterlist.append(stat.name)
 
-def EV(item,seed1,am1,tier,side,cmax,seed2=EFODLAN,am2=0):
+def EV(item,seed1,am1,tier,side,cmax,plevel,seed2=EFODLAN,am2=0):
     EV=0
     if side=="top":
-        amt=getAmount(am1,cmax,am2=am2)
+        amt=getAmount(am1,min(cmax,plevel[1]),am2=am2)
         prob=(1/(5*(am1+am2)))*(am1*(seed1.top[tier-1].count(item)*TOP[tier-1]+seed1.bottom[tier-1].count(item)*(1-TOP[tier-1]))
                                 +am2*(seed2.top[tier-1].count(item)*TOP[tier-1]+seed2.bottom[tier-1].count(item)*(1-TOP[tier-1])))
         EV=amt*prob
     else:
-        amt=getAmount(am1,cmax,am2=am2)
+        amt=getAmount(am1,min(cmax,plevel[1]),am2=am2)
         prob=(1/(5*(am1+am2)))*(am1*(seed1.top[tier-1].count(item)*(1-BOT[tier-1])+seed1.bottom[tier-1].count(item)*(BOT[tier-1]))
                                 +am2*(seed2.top[tier-1].count(item)*(1-BOT[tier-1])+seed2.bottom[tier-1].count(item)*(BOT[tier-1])))
         EV=amt*prob
@@ -253,6 +253,7 @@ def sortAlg(option):
 
 def Combos(seeds,item,plevel,cutoff=50):
     options=list()
+    benchmark=pLevel(plevel)
     for tier in range(1,4):
         goodseeds=sort(seeds,item,tier)
         for i in range(1,6):
@@ -265,25 +266,24 @@ def Combos(seeds,item,plevel,cutoff=50):
                             maxc=min(6,math.floor((MINMAX[tier-1][0][1]-score)/2))
                             if seed1==seed2:
                                 if j==0:
-                                    option=(i,seed1.name,minc,maxc, EV(item,seed1,i,tier,"top",maxc))
+                                    option=(i,seed1.name,minc,maxc, EV(item,seed1,i,tier,"top",maxc,benchmark))
                                     options.append(option)
                             else:
                                 if j>0:
-                                    option=(i,seed1.name,j,seed2.name,minc,maxc,EV(item,seed1,i,tier,"top",maxc,seed2=seed2,am2=j))
+                                    option=(i,seed1.name,j,seed2.name,minc,maxc,EV(item,seed1,i,tier,"top",maxc,benchmark,seed2=seed2,am2=j))
                                     options.append(option)
                         if SCOREBOT[0][tier-1]< score and score < SCOREBOT[1][tier-1]:
                             minc=max(0,math.ceil((MINMAX[tier-1][1][0]-score)/2))
                             maxc=min(6,math.floor((MINMAX[tier-1][1][1]-score)/2))
                             if seed1==seed2:
                                 if j==0:
-                                    option=(i,seed1.name,minc,maxc, EV(item,seed1,i,tier,"bottom",maxc))
+                                    option=(i,seed1.name,minc,maxc, EV(item,seed1,i,tier,"bottom",maxc,benchmark))
                                     options.append(option)
                             else:
                                 if j>0:
-                                    option=(i,seed1.name,j,seed2.name,minc,maxc, EV(item,seed1,i,tier,"bottom",maxc))
+                                    option=(i,seed1.name,j,seed2.name,minc,maxc, EV(item,seed1,i,tier,"bottom",maxc,benchmark,seed2=seed2,am2=j))
                                     options.append(option)
     
-    benchmark=pLevel(plevel)
     pruned=list()
     for option in options:
         if not option[-3]>benchmark[0]:
