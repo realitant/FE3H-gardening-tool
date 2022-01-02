@@ -5,9 +5,11 @@ This program assumes that you can plant up to 5 seeds and that you have unlocked
 
 You must type in what you want to grow exactly. This includes capitalization, hyphens, apostrophes, and spaces (and correct spelling of course). Input sanitization is next on my to-do list
 
-Each seed combination has a star rating. More stars mean a higher likelihood to get the item. However, some of the exact probabilities are still unknown to me, so there may be times where a close star rating actually favors the combination with fewer stars. I would try to avoid any combination with fewer than 2 stars unless there were absolutely no other options to get that item (except for stat boosters)
+There is still one unknown regarding how combining seeds affects the odds. This program assumes that if you plant x of seed1 and y of seed2, then the chance of selecting seed1's growth chart is x/(x+y). Apart from that one assumption, the expected values (EVs) generated should be accurate.
 
-Stat boosters are calculated differently. For this reason, there are only two star ratings. One star is better than none.
+The program will by default output the 50 highest producing seed combinations. At the end, you will be prompted if you would like to see the remaining combinations.
+
+Stat boosters are calculated differently. I wasn't able to find an exact way to calculate their probability so I used a general score system which should be directly proportional to the scores given.
 
 The newest release tells you how much you should cultivate a given combination. Level 0 would be not cultivating at all and Level 6 is "Spread Unicorn Blessings."
 
