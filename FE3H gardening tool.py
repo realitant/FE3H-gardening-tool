@@ -33,6 +33,15 @@ AMOUNT=[[5.5,6.5,7.5,8.5,9.5],
 
 def getAmount(am1,clevel,am2=0):
     return AMOUNT[clevel][am1+am2-1]
+
+def pLevel(n):
+    if n==1:
+        return (1,1)
+    if n==2:
+        return (1,2)
+    if n>2 and n<7:
+        return (n-1,n)
+
     
     
 
@@ -242,7 +251,7 @@ def Score(seed1,am1,seed2=EFODLAN,am2=0):
 def sortAlg(option):
     return option[-1]
 
-def Combos(seeds,item):
+def Combos(seeds,item,plevel):
     options=list()
     for tier in range(1,4):
         goodseeds=sort(seeds,item,tier)
@@ -272,22 +281,39 @@ def Combos(seeds,item):
                             else:
                                 if j>0:
                                     option=(i,seed1.name,j,seed2.name,minc,maxc, EV(item,seed1,i,tier,"bottom",maxc))
-                                    options.append(option)  
+                                    options.append(option)
+    
+    benchmark=pLevel(plevel)
+    pruned=list()
+    for option in options:
+        if not option[-3]>benchmark[0]:
+            if len(option)==5:
+                if not option[0]>benchmark[1]:
+                    pruned.append(option)
+            else:
+                if not option[0]+option[2]>benchmark[1]:
+                    pruned.append(option)
+    options=pruned
+    if len(options)==0:
+        print("Higher Professor Level Needed")
+        return -1
+
     options.sort(key=sortAlg,reverse=True)
-    for i in range(1,min(len(options),51)):
+    for i in range(1,min(len(options)+1,51)):
         option=options[i-1]
         if len(option)==5:
             print(option[0],option[1], "\tCultivate Level:",option[2],"-",option[3],"\tEV: ",round(option[4],2))
         else:
             print(option[0],option[1],"+",option[2],option[3], "\tCultivate Level:",option[4],"-",option[5],"\tEV: ",round(option[6],2))
-    print("See All? ", len(options)-50, " more...(y/n)")
-    if input()=='y' and len(options)>51:
-        for i in range(51,len(options)):
-            option=options[i-1]
-            if len(option)==5:
-                print(option[0],option[1], "\tCultivate Level:",option[2],"-",option[3],"\tEV: ",round(option[4],2))
-            else:
-                print(option[0],option[1],"+",option[2],option[3], "\tCultivate Level:",option[4],"-",option[5],"\tEV: ",round(option[6],2))
+    if len(options)>51:
+        print("See All? ", len(options)-50, " more...(y/n)")
+        if input()=='y':
+            for i in range(51,len(options)):
+                option=options[i-1]
+                if len(option)==5:
+                    print(option[0],option[1], "\tCultivate Level:",option[2],"-",option[3],"\tEV: ",round(option[4],2))
+                else:
+                    print(option[0],option[1],"+",option[2],option[3], "\tCultivate Level:",option[4],"-",option[5],"\tEV: ",round(option[6],2))
 
 def getTier(score):
     tier=-1
@@ -343,9 +369,9 @@ def statCombos(stat,seeds):
         else:
             print(option[0],option[1], "+", option[2],option[3],"\tSCORE:\t", option[4])
 
-def getCombos(item):
+def getCombos(item,plevel):
     if item in itemset:
-        Combos(seeds,item)
+        Combos(seeds,item,plevel)
     else:
         if boosterlist.count(item)>0:
             statCombos(stat,seeds)
@@ -353,9 +379,17 @@ def getCombos(item):
             print('Item not found')
 on=True
 while on:
+    print("Enter your PROFESSOR LEVEL...")
+    print("1)E")
+    print("2)E+")
+    print("3)D-D+")
+    print("4)C-C+")
+    print("5)B-B+")
+    print("6)A-A+")
+    plevel=int(input())
     print("What do you want to grow?")                   
     item=input()
-    getCombos(item)
+    getCombos(item,plevel)
     print("Press enter to run again or type 'exit' to quit")
     if input()=='exit':
         on=False
