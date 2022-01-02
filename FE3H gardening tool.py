@@ -151,9 +151,9 @@ REDFLWR=Produce('Red Flower Seeds', 24, 3,
                 ('Daffodil','Onion','Blue Flower Seeds','Albinean Seeds','Rose'),
                 ('Rose','Mixed Herb Seeds','Albinean Seeds','Nordsalat','Magdred Kirsch'))
 WHTFLWR=Produce('White Flower Seeds', 5, 3,
-                ('Weeds','Weeds','Weeds','Baby’s Breath','White Flower Seeds'),
-                ('Weeds','White Flower Seeds','Green Flower Seeds','Daffodil','Baby’s Breath'),
-                ('Daffodil','Baby’s Breath','Lily','Lily of the Valley','Blue Flower Seeds'),
+                ('Weeds','Weeds','Weeds',"Baby's Breath",'White Flower Seeds'),
+                ('Weeds','White Flower Seeds','Green Flower Seeds','Daffodil',"Baby's Breath"),
+                ('Daffodil',"Baby's Breath",'Lily','Lily of the Valley','Blue Flower Seeds'),
                 ('Sunflower','Anemone','Green Flower Seeds','Yellow Flower Seeds','Purple Flower Seeds'),
                 ('Sunflower','Southern Fodlan Seeds','Purple Flower Seeds','Turnip','Daffodil'),
                 ('Daffodil','Vegetable Seeds','Western Fodlan Seeds','Morfis-Plum Seeds','Boa Fruit'))
@@ -168,7 +168,7 @@ PURPFLWR=Produce('Purple Flower Seeds', 16, 3,
                  ('Weeds','Weeds','Weeds','Lavender','Purple Flower Seeds'),
                  ('Weeds','Purple Flower Seeds','Red Flower Seeds','Violet','Lavender'),
                  ('Violet','Rose','Lavender','Forget-me-nots','Yellow Flower Seeds'),
-                 ('Pitcher Plant','Baby’s Breath','Red Flower Seeds','Pale-Blue Flower Seeds','Green Flower Seeds'),
+                 ('Pitcher Plant',"Baby's Breath",'Red Flower Seeds','Pale-Blue Flower Seeds','Green Flower Seeds'),
                  ('Pitcher Plant','Cabbage','Green Flower Seeds','Mixed Herb Seeds','Violet'),
                  ('Lavender','Western Fodlan Seeds','Morfis Seeds','Eastern Fodlan Seeds','Albinean Berries'))
 YELLFLWR=Produce('Yellow Flower Seeds', 55, 3,
@@ -251,7 +251,7 @@ def Score(seed1,am1,seed2=EFODLAN,am2=0):
 def sortAlg(option):
     return option[-1]
 
-def Combos(seeds,item,plevel):
+def Combos(seeds,item,plevel,cutoff=50):
     options=list()
     for tier in range(1,4):
         goodseeds=sort(seeds,item,tier)
@@ -299,13 +299,13 @@ def Combos(seeds,item,plevel):
         return -1
 
     options.sort(key=sortAlg,reverse=True)
-    for i in range(1,min(len(options)+1,51)):
+    for i in range(1,min(len(options)+1,cutoff+1)):
         option=options[i-1]
         if len(option)==5:
             print(option[0],option[1], "\tCultivate Level:",option[2],"-",option[3],"\tEV: ",round(option[4],2))
         else:
             print(option[0],option[1],"+",option[2],option[3], "\tCultivate Level:",option[4],"-",option[5],"\tEV: ",round(option[6],2))
-    if len(options)>51:
+    if len(options)>51 and cutoff==50:
         print("See All? ", len(options)-50, " more...(y/n)")
         if input()=='y':
             for i in range(51,len(options)):
