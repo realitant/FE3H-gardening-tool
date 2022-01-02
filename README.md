@@ -1,9 +1,9 @@
 # Fire Emblem: Three Houses Gardening Tool
 
 
-This program assumes that you can plant up to 5 seeds and that you have unlocked all the cultivate methods. I may in the future have another prompt for professor level and all that stuff, but as of right now, that has not happened.
+As of the latest release, this program works for all professor levels.
 
-You must type in what you want to grow exactly. This includes capitalization, hyphens, apostrophes, and spaces (and correct spelling of course). Input sanitization is next on my to-do list
+You must type in what you want to grow exactly. This includes capitalization, hyphens, apostrophes, and spaces (and correct spelling of course).
 
 There is still one unknown regarding how combining seeds affects the odds. This program assumes that if you plant x of seed1 and y of seed2, then the chance of selecting seed1's growth chart is x/(x+y). Apart from that one assumption, the expected values (EVs) generated should be accurate.
 
